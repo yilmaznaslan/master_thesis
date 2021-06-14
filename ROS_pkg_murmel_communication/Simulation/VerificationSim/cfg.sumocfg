@@ -1,0 +1,16 @@
+<configuration>
+<input>
+
+<net-file value = "Map/mapSimulation.net.xml"/>
+<route-files value= "simulation.rou.xml" />
+<additional-files value ="ads.xml"  />
+
+
+</input>
+
+
+
+
+
+
+</configuration>

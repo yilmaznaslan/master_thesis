@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="static/murmel.png">
+</head>
+
+<body stlye = "height:400px"> 
+<h3 style="text-align:center" > Robot Route Configuration Service</h3>
+<h4 style="text-align:left" > Robot 1</h4>
+
+<p id="info">SUMO Route Validation: <b>Succesfull</b></p>
+<br>
+<a href="/route_service/request/robot1" ><button>Back</button></a>
+<a href="/route_service" ><button>Main Menu</button></a>
+<button id ="send_button" onclick="sendroute()"> Send the Updated Route</button></a>
+
+</body>
+
+<script>
+    let uri = "wss://murmel.website:8000";
+
+    function sendroute() {        
+        socket = new WebSocket(uri);
+
+        socket.onopen = function (event) {
+            console.log("WebSocket is open now.");
+            socket.send("robot1_route_sender");
+            //socket.close()
+
+        };
+        socket.onmessage = function (event) {
+            //print(event.data);
+        if(event.data =="ok"){
+            var info = document.getElementById("info");
+            info.innerHTML = "Route Successfully send";
+        }else{
+            var info = document.getElementById("info");
+            info.innerHTML = "Failed to send route to robot";
+        }
+        }
+
+        //socket.close()
+
+    }
+
+    
+
+
+</script>
+</html>

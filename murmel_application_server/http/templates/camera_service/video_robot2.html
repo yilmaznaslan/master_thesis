@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Murmel Camera Service</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../static/murmel.png">
+
+</head>
+
+<body stlye="height:400px">
+    <h3 style="text-align:center">Robot Streaming Server</h3>
+    <h3>Robot 2</h3>
+    <button id="start_button" onclick="startstream()">Start</button>
+    <button id="start_button" onclick="stopstream()">Stop</button>
+    <a href="/camera_service" style="padding-left: 20px;"><button>Camera Service Menu</button></a>
+    <span id="dot" style="  height: 15px;
+        width: 15px;
+        background-color:white;
+        border-radius: 50%;
+        display: inline-block;
+    "></span>
+
+    <br><br>
+    <div>
+
+        <img id="robotimg" src="../../static/murmel.png" alt="" width="640" height="480">
+
+
+    </div>
+
+
+</body>
+
+<script>
+
+
+    function startstream() {
+        robotimg = document.getElementById('robotimg')
+        robotimg.src = "../../static/tenor.gif"
+
+        let uri = "ws://192.168.178.52:8000";
+        socket = new WebSocket(uri);
+        socket.addEventListener('open', () => {
+            socket.send("robot2_listener");
+            document.getElementById("dot").style.background = "red";
+        });
+
+        
+
+        socket.addEventListener('message', (e) => {
+        console.log('img received');
+        robotimg = document.getElementById('robotimg')
+        robotimg.src = URL.createObjectURL(e.data);
+        
+
+
+    });
+
+    }
+
+    function stopstream() {
+        socket.close()
+        document.getElementById("dot").style.background = "white";
+        document.getElementById("robotimg").src = "../../static/murmel.png"
+
+    }
+
+
+</script>
+
+</html>

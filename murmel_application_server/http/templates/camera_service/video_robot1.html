@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Murmel Camera Service</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../static/murmel.png">
+
+</head>
+
+<body style="width: 640px;">
+
+    <div>
+        <h3 style="text-align:center">MURMEL Video Streaming Service</h3>
+        <h3>Robot 1</h3>
+        <button id="start_button" onclick="startstream()">Start</button>
+        <button id="start_button" onclick="stopstream()">Stop</button>
+        <button type="submit" onClick="refreshPage()">Refresh</button>
+
+        <a href="/camera_service" style="padding-left: 20px;"><button>Camera Service Menu</button></a>
+        <span id="dot" style="  height: 15px;
+            width: 15px;
+            background-color:white;
+            border-radius: 50%;
+            display: inline-block;
+        "></span>
+
+        <br><br>
+        <img id="robotimg" src="../../static/murmel.png" alt="" width="640" height="480">
+        <p id="error_msg" style="display: none; width: 60%;"> Robot is currently not online. Please make sure WebSocket node in the
+            ROS is alive and connected.
+        </p>
+
+    </div>
+
+
+</body>
+
+<script>
+    robotimg = document.getElementById('robotimg')
+    errormsg = document.getElementById('error_msg')
+
+    function startstream() {
+        if (typeof (socket) != 'undefined') {
+            socket.close()
+            console.log("Closing session first")
+        }
+
+
+        robotimg.src = "../../static/tenor.gif"
+
+        //ws_host = "127.0.0.1"
+        //ws_host = "85.215.90.115"
+        ws_host = "murmel.website"
+        let uri = "wss://" + ws_host + ":8000";
+        socket = new WebSocket(uri);
+
+        socket.onopen = function (event) {
+            console.log("WebSocket is open now.");
+            socket.send("robot1_listener");
+        };
+
+        socket.onmessage = function (event) {
+            if (typeof (event.data) == 'object') {
+                robotimg.src = URL.createObjectURL(event.data);
+                document.getElementById("dot").style.background = "red";
+                errormsg.style.display = 'none'
+            }
+            if (typeof (event.data) == 'string') {
+                errormsg.style.display = 'block'
+                robotimg.style.display = 'none'
+            }
+
+
+
+
+        };
+
+    }
+
+    function stopstream() {
+        if (typeof (socket) != 'undefined') {
+            socket.close()
+            console.log("Closing the session")
+            document.getElementById("dot").style.background = "white";
+            document.getElementById("robotimg").src = "../../static/murmel.png"
+        }
+
+
+    }
+
+    function refreshPage() {
+        window.location.reload();
+    }
+</script>
+
+</html>

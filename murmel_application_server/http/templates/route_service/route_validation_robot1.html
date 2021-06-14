@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="static/murmel.png">
+</head>
+
+<body stlye="height:400px">
+    <h3 style="text-align:center"> Robot Route Configuration Service</h3>
+    <h4 style="text-align:left"> Robot 1</h4>
+
+
+    <label for="">Route created</label> <span style="font-style: italic;">{{route}}</span> <br>
+    <label for="">Simulation Validation Result for created route: <span style="font-style: italic;">{{route}}</span>:
+    </label><span style="font-size: large; font-weight: bold;">{{val_result}}</span>
+    <br><br>
+    <a href="/route_service/request/robot1"><button>Back</button></a>
+    <a href="/route_service"><button>Main Menu</button></a>
+
+    <form action="/route_service/update_route" method="post">
+
+
+        <input type="hidden" name="robot1_update" value="true">
+
+        <button type="submit">Update new route to robot 1</button>
+    </form>
+
+
+    <br>
+    <br>
+
+</body>
+
+
+</html>

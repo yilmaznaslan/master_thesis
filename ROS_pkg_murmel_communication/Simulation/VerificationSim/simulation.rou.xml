@@ -1,0 +1,43 @@
+<routes>
+
+
+    <vType accel="1.0" color="red" decel="0.5" id="Mothership" length="6" maxSpeed="10" sigma="0.0" />
+    <vType accel="0.5" color="yellow" decel="0.5" id="ElectricRobot" lenght="2" maxSpeed="3" sigma="0.0">
+        <param key="has.battery.device" value="true" />
+        <param key="maximumBatteryCapacity" value="2000" />
+        <param key="maximumPower" value="100" />
+        <param key="vehicleMass" value="200" />
+        <param key="frontSurfaceArea" value="2" />   
+        <param key="airDragCoefficient" value="2.6" />
+        <param key="internalMomentOfInertia" value="0.01" />
+        <param key="radialDragCoefficient" value="0.5" />
+        <param key="rollDragCoefficient" value="0.02" />
+        <param key="constantPowerIntake" value="100" />
+        <param key="propulsionEfficiency" value="0.9" />
+        <param key="recuperationEfficiency" value="0.9" />
+        <param key="stoppingTreshold" value="0.1" />
+    </vType>
+
+    
+    <route edges="-152832873#3 -152832873#2 -152832873#1 -152832873#0 gneE0 152832871#0 152832871#1 152832871#2 152832871#3 gneE5" id="robot1_route1">       
+    </route>
+
+    <route edges="-152832873#3 -152832873#2 -152832873#1 -256051200#1 gneE11 -256050175#0 -116715886 152832871#1 152832871#2 152832871#3 gneE5" id="robot1_route2">       
+    </route>
+
+
+    <route edges="152699780#2 152699780#3 152699780#4 152699780#5 24619225#6 24619225#7 24619225#8 30127237#0 30127237#1 152832873#0 152832873#1 152832873#2 152832873#3" id="robot2_route1">       
+    </route>
+
+    <route edges="gneE5 152699780#2" id="mothersip1_route">
+        <stop duration="60" lane="gneE5_0" />
+
+         <stop busStop="busStopA" until="1100" />
+    </route>
+
+    <vehicle depart="0" id="mothership1" route="mothersip1_route" type="Mothership" />
+    <vehicle depart="30" id="Robot1" route="robot1_route1" type="ElectricRobot" />
+    <vehicle depart="30" id="Robot2" route="robot2_route1" type="ElectricRobot" />
+
+
+</routes>
