@@ -7,14 +7,6 @@ import pickle
 import ssl
 import os
 
-# Context settings in case SSL encryption is needed. Please make sure to use correct private key for server.
-def set_context():
-    global context
-    path = os.environ['murmel_application_server']
-    print('path to env variable'+os.environ['murmel_application_server'])
-    context = ssl.SSLContext()
-    context.load_cert_chain(path+'/certificates/cert.crt',
-                            path+'/certificates/private.key')
 
 
 # Replace IP address with the public IP address or host name of the server machine
@@ -140,6 +132,14 @@ async def handle_client(websocket, path):
         else:
             await websocket.send("failed")
 
+# Context settings in case SSL encryption is needed. Please make sure to use correct private key for server.
+def set_context():
+    global context
+    path = os.environ['murmel_application_server']
+    print('path to env variable'+os.environ['murmel_application_server'])
+    context = ssl.SSLContext()
+    context.load_cert_chain(path+'/certificates/cert.crt',
+                            path+'/certificates/private.key')
 
 if __name__ == "__main__":
     print("Websocket Server started")
