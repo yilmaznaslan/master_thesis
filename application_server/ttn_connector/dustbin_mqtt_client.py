@@ -1,6 +1,8 @@
 import time
 import paho.mqtt.client as mqtt
 import json
+
+# TTN Credidentials 
 app_id = "tez_test"
 dev_id = "tuberlin_lora"
 app_access_key = "ttn-account-v2.iClDkXeKp67ziIBLDCIGVbrRSinwRksbcCrff0XgNxg"
@@ -11,12 +13,7 @@ app_access_key = "ttn-account-v2.iClDkXeKp67ziIBLDCIGVbrRSinwRksbcCrff0XgNxg"
 ttn_server = 'eu.thethings.network'
 ttn_port = 1883
 ttn_topicTelemetry = app_id+"/"+"devices/"+dev_id+"/up"
-mqtt_return = {0: "Connection accepted",
-               1: "Connection refused, unacceptable protocol version",
-               2: "Connection refused, identifier rejected",
-               3: "Connection refused, server unavailable",
-               4: "Connection refused, bad user name or password",
-               5: "Connection refused, not authorized"}
+
 
 # Thingsboard MQTT Variables
 thingsboard_server = 'demo.thingsboard.io'
@@ -27,6 +24,13 @@ thingsboard_topicTelemetry = "v1/devices/me/telemetry"
 
 def ttn_on_connect(client, userdata, flags, rc):
     global mqtt_return
+    mqtt_return = {0: "Connection accepted",
+               1: "Connection refused, unacceptable protocol version",
+               2: "Connection refused, identifier rejected",
+               3: "Connection refused, server unavailable",
+               4: "Connection refused, bad user name or password",
+               5: "Connection refused, not authorized"}
+
     cname = client._client_id.decode('utf-8')
     print("Client: {} MQTT return code: {}".format(cname, mqtt_return[rc]))
     client.subscribe(ttn_topicTelemetry)
