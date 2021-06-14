@@ -5,15 +5,20 @@ import numpy as np
 import random
 import pickle
 import ssl
+import os
+
+# Context settings in case SSL encryption is needed. Please make sure to use correct private key for server.
+def set_context():
+    global context
+    path = os.environ['murmel_application_server']
+    print('path to env variable'+os.environ['murmel_application_server'])
+    context = ssl.SSLContext()
+    context.load_cert_chain(path+'/certificates/cert.crt',
+                            path+'/certificates/private.key')
 
 
-path = "/root/murmel/servers/"
-context =  ssl.SSLContext()
-context.load_cert_chain(path+'/certificates/cert.crt',path+'/certificates/private.key')
-
-
-#ws_host = "127.0.0.1"
-ws_host = "murmel.website"
+# Replace IP address with the public IP address or host name of the server machine
+ws_host = "127.0.0.1"
 ws_port = 8000
 
 
@@ -23,12 +28,10 @@ robot1_listener_count = 0
 robot1_stream_update = False
 robot1_stream = False
 robot1_alive = False
+websocket_robot1 = None
 
 
-
-# Get and set Robot alive    OKAY
-
-
+# Get and set Robot alive
 def robot1_alive_get():
     global robot1_alive
     return robot1_alive
@@ -37,9 +40,8 @@ def robot1_alive_get():
 def robot1_alive_set(status: bool):
     global robot1_alive
     robot1_alive = status
-# Get and set the Frames    OKAY
 
-
+# Get and set the Frames
 def frame_get():
     global robot1_frame
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 65]
@@ -51,9 +53,7 @@ def frame_set(frame):
     global robot1_frame
     robot1_frame = frame
 
-# Fucntions for handling start,stop  informations of streaming frame #####  (Okay)
-
-
+# Functions for handling start,stop  informations of streaming frame 
 def robot1_stream_set(action):
     global robot1_stream
     robot1_stream = action
@@ -64,8 +64,7 @@ def robot1_stream_get():
     return robot1_stream
 
 
-# Fucntions for handling robot listeners #####  (Okay)
-
+# Fucntions for handling robot listeners
 def robot1_listener_add():
     global robot1_listener_count
     robot1_listener_count = robot1_listener_count + 1
@@ -80,9 +79,7 @@ def robot1_listener_get_count():
     global robot1_listener_count
     return robot1_listener_count
 
-# Generic function for handling the clients
-
-websocket_robot1 = None
+# Generic function for handling the communication between robot and clients
 async def handle_client(websocket, path):
     global error_frame
     global websocket_robot1
@@ -107,7 +104,6 @@ async def handle_client(websocket, path):
                     print("-- Last listener closed the connection")
                     robot1_stream_set(False)
                 break
-
     if(name == f"robot1"):
         print(f"-- {name} is connected")
         robot1_alive_set(True)
@@ -145,12 +141,13 @@ async def handle_client(websocket, path):
             await websocket.send("failed")
 
 
-
-print("Websocket Server started")
-start_server = websockets.serve( handle_client, ws_host, ws_port, max_size=2**40,ssl= context)
-#start_server = websockets.serve(handle_client,ws_host,ws_port,max_size = 2**40)
-asyncio.get_event_loop().run_until_complete(start_server)
-try:
-    asyncio.get_event_loop().run_forever()
-except KeyboardInterrupt:
-    print("\nCTRLC pressed exiting")
+if __name__ == "__main__":
+    print("Websocket Server started")
+    #start_server = websockets.serve( handle_client, ws_host, ws_port, max_size=2**40,ssl= context)
+    start_server = websockets.serve(
+        handle_client, ws_host, ws_port, max_size=2**40)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    try:
+        asyncio.get_event_loop().run_forever()
+    except KeyboardInterrupt:
+        print("\nCTRLC is pressed exiting")
