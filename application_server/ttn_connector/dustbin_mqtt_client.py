@@ -21,7 +21,7 @@ thingsboard_port = 1883
 thingsboard_topicTelemetry = "v1/devices/me/telemetry"
 
 
-
+# TTN MQTT Callbacks
 def ttn_on_connect(client, userdata, flags, rc):
     global mqtt_return
     mqtt_return = {0: "Connection accepted",
@@ -49,7 +49,7 @@ def ttn_on_message(client, userdata, msg):
     print("Message received: "+level_str)
     thingsboard_client.publish(thingsboard_topicTelemetry,level_str)
     
-
+# Thingsboard MQTT Callbacks
 def thingsboard_on_connect(client, userdata, flags, rc):
     global mqtt_return
     cname = client._client_id.decode('utf-8')
@@ -80,5 +80,5 @@ thingsboard_client.loop_start()
 
 
 
-
+# Run one of the client forever
 ttn_client.loop_forever()
