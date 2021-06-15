@@ -1,54 +1,58 @@
-
+// LoRaWAN Libraries
 #include <lmic.h>
 #include <hal/hal.h>
 #include <SPI.h>
 #include <Adafruit_NeoPixel.h>
-#include <Wire.h>
-#include <VL53L0X.h>
+
+// Other Libraries
 #include <ArduinoJson.h>
 
+// Sensor library build for ESP32
+#include "Adafruit_VL53L0X.h"
 
-int laser_three = 32;  // P19 = GPIO32 (ESP32)
-int laser_two = 33;    // P20 = GPIO33 (ESP32)
-int laser_one = 26;    // P21 = GPIO26 (ESP32)
-TwoWire I2CBME = TwoWire(0);
+// Defining the xshut pins of sensors
+int sensor1_xshut = 32;  // GPIO32(ESP32) & P19(Lopy4) 
+int sensor2_xshut = 33;  // GPIO33(ESP32) & P20(Lopy4) 
+int sensor3_xshut = 26;  // GPIO26(ESP32) & P21(Lopy4)
 
-VL53L0X sensor1;
-VL53L0X sensor2;
-VL53L0X sensor3;
+// Defining I2C Slave address we will assign if dual sensor is present
+#define sensor1_ADDRESS 0x30
+#define sensor2_ADDRESS 0x31
+#define sensor3_ADDRESS 0x32
+
+
+// Defining objects for the vl53l0x sesnors
+Adafruit_VL53L0X sensor1 = Adafruit_VL53L0X();
+Adafruit_VL53L0X sensor2 = Adafruit_VL53L0X();
+Adafruit_VL53L0X sensor3 = Adafruit_VL53L0X();
 StaticJsonDocument<200> doc;
+
+// this holds the measurement
+VL53L0X_RangingMeasurementData_t sensor1_data;
+VL53L0X_RangingMeasurementData_t sensor2_data;
+VL53L0X_RangingMeasurementData_t sensor3_data;
+
+float Abstand1;
+float Abstand2;
+float Abstand3;
+float Abstand4;
+float Abstand5;
+float Abstand6;
+float Abstand7;
+float Abstand8;
+float Abstand9;
+float Abstand10;
+float Abstand11;
+float Abstand12;
+
 
 float maxhight = 71.8;
 
-float Abstand1;
-
-float Abstand2;
-
-float Abstand3;
-
 float Mittelwert1;
-
-float Abstand4;
-
-float Abstand5;
-
-float Abstand6;
 
 float Mittelwert2;
 
-float Abstand7;
-
-float Abstand8;
-
-float Abstand9;
-
 float Mittelwert3;
-
-float Abstand10;
-
-float Abstand11;
-
-float Abstand12;
 
 float Mittelwert4;
 
@@ -69,6 +73,7 @@ bool i = true;
 #define PIN 0
 int timer = 0;
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(1, PIN, NEO_GRB + NEO_KHZ800);
+
 
 static const u1_t PROGMEM APPEUI[8] = { 0x74, 0x38, 0x03, 0xD0, 0x7E, 0xD5, 0xB3, 0X70};
 static const u1_t PROGMEM DEVEUI[8] = {0x53, 0x7F, 0x51, 0x0B, 0x47, 0xE5, 0x49, 0x00};
@@ -194,54 +199,64 @@ void add_tx_queue(osjob_t* j, int val = 50) {
 }
 
 
-void init_lasers() {
-  int sda = 25; // P22
-  int scl = 14; // P23
+void init_sensors() {
+  Serial.println(F("Shutdown pins inited..."));
+  pinMode(sensor1_xshut,OUTPUT);
+  pinMode(sensor2_xshut,OUTPUT);
+  pinMode(sensor3_xshut,OUTPUT);
   
-  pinMode(laser_three, OUTPUT);
-  pinMode(laser_two, OUTPUT);
-  pinMode(laser_one, OUTPUT);
-
-  digitalWrite(laser_three, HIGH);
-  digitalWrite(laser_two, HIGH);
-  digitalWrite(laser_one, HIGH);
-  delay(500);
-
-  Wire.begin(sda,scl);
-  //I2CBME.begin(sda,scl, 100000);
-
-  // Init laser sensor1 address 1
-  digitalWrite(laser_one, HIGH);
-  delay(150);
-  sensor1.init(true);
+  // all reset
+  digitalWrite(sensor1_xshut, LOW);    
+  digitalWrite(sensor2_xshut, LOW);
+  digitalWrite(sensor3_xshut, LOW);
   delay(100);
-  sensor1.setAddress((uint8_t)01);
 
-
-  // Init laser sensor1 address 2
-  digitalWrite(laser_two, HIGH);
-  delay(150);
-  sensor2.init(true);
+  
+  // all unreset
+  digitalWrite(sensor1_xshut, HIGH);
+  digitalWrite(sensor2_xshut, HIGH);
+  digitalWrite(sensor3_xshut, HIGH);
   delay(100);
-  sensor2.setAddress((uint8_t)02);
 
-
-  // Init laser sensor1 address 3
-  digitalWrite(laser_three, HIGH);
-  delay(150);
-  sensor3.init(true);
+  // all reset again
+  digitalWrite(sensor1_xshut, LOW);
+  digitalWrite(sensor2_xshut, LOW);
+  digitalWrite(sensor3_xshut, LOW);
   delay(100);
-  sensor3.setAddress((uint8_t)03);
+
+  // Initialize sensor1
+  digitalWrite(sensor1_xshut, HIGH);
+  if(!sensor1.begin(sensor1_ADDRESS)) {
+    Serial.println(F("Failed to boot first VL53L0X"));
+    while(1);
+  }
+   Serial.println(F("Successfull to boot first VL53L0X"));
+  
+
+  // Initialize sensor2
+  digitalWrite(sensor2_xshut, HIGH);
+  delay(100);
+  if(!sensor2.begin(sensor2_ADDRESS)) {
+    Serial.println(F("Failed to boot second VL53L0X"));
+    while(1);
+  }
+Serial.println(F("Successfull to boot second VL53L0X"));
+  
+  // activating sensor3
+  digitalWrite(sensor3_xshut, HIGH);
+  delay(100);
+  if(!sensor3.begin(sensor3_ADDRESS)) {
+    Serial.println(F("Failed to boot third VL53L0X"));
+    while(1);
+  }
+Serial.println(F("Successfull to boot third VL53L0X"));
 
 
 
-  sensor1.startContinuous();
-  sensor2.startContinuous();
-  sensor3.startContinuous();
-
+    Serial.println(F("Starting..."));
 }
 void setup() {
-  init_lasers();
+  init_sensors();
    
   pixels.begin();
   Serial.begin(9600);
@@ -253,8 +268,6 @@ void setup() {
   // Reset the MAC state. Session and pending data transfers will be discarded.
   LMIC_reset();
 
-  // Start job (sending automatically starts OTAA too)
-  //add_tx_queue(&txjob);
 
   // Start OTAA and add the initial job to upstream data transmission at the next possible time.
   add_tx_queue(&txjob, 100);
@@ -266,8 +279,8 @@ void setup() {
 
 
   // Wait until LoRa Connection to TTN is established
-  while (is_joined) {
-    os_runloop_once();
+  while (not is_joined) {
+   os_runloop_once();
   }
 
 
@@ -282,6 +295,9 @@ void loop() {
   // add_tx_queue(&txjob, random(0,100) );
   // delay(10000);
   marco();
+
+  
+
 
 
 }
@@ -303,8 +319,9 @@ void marco(){
         Serial.println("-----------------------------");
       }
       delay(3000);
-      Abstand1 = sensor1.readRangeContinuousMillimeters();
-
+        sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand1  =sensor1_data.RangeMilliMeter;
+  os_runloop_once();
       Serial.print("Abstand1 beträgt:");
       Serial.print(Abstand1 / 10);
       Serial.println("cm");
@@ -312,7 +329,9 @@ void marco(){
       delay(2000);
 
 
-      Abstand2 = sensor2.readRangeContinuousMillimeters();
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand2  =sensor2_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand2 beträgt:");
       Serial.print(Abstand2 / 10);
@@ -321,7 +340,9 @@ void marco(){
       delay(2000);
 
 
-      Abstand3 = sensor3.readRangeContinuousMillimeters();
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand3  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand3 beträgt:");
       Serial.print(Abstand3 / 10);
@@ -336,15 +357,20 @@ void marco(){
 
       delay(10000);
 
-      Abstand4 = sensor1.readRangeContinuousMillimeters();
-
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand4  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
       Serial.print("Abstand4 beträgt:");
       Serial.print(Abstand4 / 10);
       Serial.println("cm");
 
       delay(2000);
 
-      Abstand5 = sensor2.readRangeContinuousMillimeters();
+      
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand5  =sensor2_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand5 beträgt:");
       Serial.print(Abstand5 / 10);
@@ -353,7 +379,10 @@ void marco(){
       delay(2000);
 
 
-      Abstand6 = sensor3.readRangeContinuousMillimeters();
+      
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand6  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand6 beträgt:");
       Serial.print(Abstand6 / 10);
@@ -369,7 +398,10 @@ void marco(){
 
       delay(10000);
 
-      Abstand7 = sensor1.readRangeContinuousMillimeters();
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand7  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand7 beträgt:");
       Serial.print(Abstand7 / 10);
@@ -377,8 +409,11 @@ void marco(){
 
 
       delay(2000);
-      Abstand8 = sensor2.readRangeContinuousMillimeters();
+      
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand8  =sensor2_data.RangeMilliMeter;
 
+os_runloop_once();
       Serial.print("Abstand8 beträgt:");
       Serial.print(Abstand8 / 10);
       Serial.println("cm");
@@ -386,7 +421,10 @@ void marco(){
       delay(2000);
 
 
-      Abstand9 = sensor3.readRangeContinuousMillimeters();
+      
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand9  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand9 beträgt:");
       Serial.print(Abstand9 / 10);
@@ -401,7 +439,10 @@ void marco(){
 
       delay(10000);
 
-      Abstand10 = sensor1.readRangeContinuousMillimeters();
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand10  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand10 beträgt:");
       Serial.print(Abstand10 / 10);
@@ -409,8 +450,11 @@ void marco(){
 
       delay(2000);
 
-      Abstand11 = sensor2.readRangeContinuousMillimeters();
+      
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand11  =sensor2_data.RangeMilliMeter;
 
+os_runloop_once();
       Serial.print("Abstand11 beträgt:");
       Serial.print(Abstand11 / 10);
       Serial.println("cm");
@@ -418,7 +462,10 @@ void marco(){
 
       delay(2000);
 
-      Abstand12 = sensor3.readRangeContinuousMillimeters();
+      
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand12  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand12 beträgt:");
       Serial.print(Abstand12 / 10);
@@ -435,7 +482,7 @@ void marco(){
 
       Abstand = (Mittelwert1 + Mittelwert2 + Mittelwert3 + Mittelwert4) / 4;
       fuellstand = 100 - ((Abstand * 100) / maxhight);
-
+os_runloop_once();
       delay(3000);
 
       Serial.print("der finale Abstand beträgt:");
@@ -512,7 +559,10 @@ void marco(){
       }
       delay(10000);
 
-      Abstand1 = sensor1.readRangeContinuousMillimeters();
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand1  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand1 beträgt:");
       Serial.print(Abstand1 / 10);
@@ -520,16 +570,19 @@ void marco(){
 
 
 
-      Abstand2 = sensor2.readRangeContinuousMillimeters();
+     
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand2  =sensor2_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand2 beträgt:");
       Serial.print(Abstand2 / 10);
       Serial.println("cm");
 
-
-
-
-      Abstand3 = sensor3.readRangeContinuousMillimeters();
+      
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand3  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand3 beträgt:");
       Serial.print(Abstand3 / 10);
@@ -544,7 +597,10 @@ void marco(){
 
       delay(10000);
 
-      Abstand4 = sensor1.readRangeContinuousMillimeters();
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand4  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand4 beträgt:");
       Serial.print(Abstand4 / 10);
@@ -552,7 +608,10 @@ void marco(){
 
 
 
-      Abstand5 = sensor2.readRangeContinuousMillimeters();
+      
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand5  =sensor2_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand5 beträgt:");
       Serial.print(Abstand5 / 10);
@@ -561,7 +620,10 @@ void marco(){
 
 
 
-      Abstand6 = sensor3.readRangeContinuousMillimeters();
+    
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand6  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand6 beträgt:");
       Serial.print(Abstand6 / 10);
@@ -577,7 +639,10 @@ void marco(){
 
       delay(10000);
 
-      Abstand7 = sensor1.readRangeContinuousMillimeters();
+      
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand7  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand7 beträgt:");
       Serial.print(Abstand7 / 10);
@@ -585,7 +650,10 @@ void marco(){
 
 
 
-      Abstand8 = sensor2.readRangeContinuousMillimeters();
+
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand8  =sensor2_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand8 beträgt:");
       Serial.print(Abstand8 / 10);
@@ -594,7 +662,9 @@ void marco(){
 
 
 
-      Abstand9 = sensor3.readRangeContinuousMillimeters();
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand9  =sensor3_data.RangeMilliMeter;
+os_runloop_once();
 
       Serial.print("Abstand9 beträgt:");
       Serial.print(Abstand9 / 10);
@@ -609,15 +679,19 @@ void marco(){
 
       delay(10000);
 
-      Abstand10 = sensor1.readRangeContinuousMillimeters();
 
+      sensor1.rangingTest(&sensor1_data, false); // pass in 'true' to get debug data printout!
+      Abstand10  =sensor1_data.RangeMilliMeter;
+os_runloop_once();
       Serial.print("Abstand10 beträgt:");
       Serial.print(Abstand10 / 10);
       Serial.println("cm");
 
 
 
-      Abstand11 = sensor2.readRangeContinuousMillimeters();
+      sensor2.rangingTest(&sensor2_data, false); // pass in 'true' to get debug data printout!
+      Abstand11  =sensor2_data.RangeMilliMeter;
+
 
       Serial.print("Abstand11 beträgt:");
       Serial.print(Abstand11 / 10);
@@ -626,8 +700,10 @@ void marco(){
 
 
 
-      Abstand12 = sensor3.readRangeContinuousMillimeters();
+      sensor3.rangingTest(&sensor3_data, false); // pass in 'true' to get debug data printout!
+      Abstand12  =sensor3_data.RangeMilliMeter;
 
+os_runloop_once();
       Serial.print("Abstand12 beträgt:");
       Serial.print(Abstand12 / 10);
       Serial.println("cm");
@@ -643,7 +719,7 @@ void marco(){
 
       Abstand = (Mittelwert1 + Mittelwert2 + Mittelwert3 + Mittelwert4) / 4;
       fuellstand = 100 - ((Abstand * 100) / maxhight);
-
+os_runloop_once();
       delay(3000);
 
       Serial.print("der finale Abstand beträgt:");
@@ -667,7 +743,7 @@ void marco(){
       //Falls er zwischen 75% und 90% liegt wird der Füllstand nicht geschickt und die Messung nach 4 Stunden wiederholt.
       // Nach 12 Stunden oder drei Schleifendurchläufen wird der Füllstand geschickt
 
-
+os_runloop_once();
       if (fuellstand > 90) {                            //wird geprüft ob Füllstand über 90% ist, falls ja wird dieser auch für nicht hochfrequente Standorte sofort geschickt
         Serial.println("Füllstand wird geschickt");
         add_tx_queue(&txjob, fuellstand);
