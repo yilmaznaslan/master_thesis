@@ -20,7 +20,7 @@ Repository consists of three main components of the communication network
 - LoRaWAN implementation for the *Smart Dustbins*
 - ROS package for the *Service Robot*
 - Murmel Application Server 
-
+j
 
 ## Table of contents
 * [General info](#introduction)
