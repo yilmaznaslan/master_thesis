@@ -1,5 +1,0 @@
-1) VerificationSimulation.py
- It is used to simulate a SUMO simulation in advance to get GPS points of the routes of Robot1 Robot2 and Mothership.
-You dont need to run it if there is no changes in the route planning.
-
-2) As a result of the VerificationSim/verificationSim.py GPS points of the robots and mothrhips are stored in VerificationSim/Coordinates

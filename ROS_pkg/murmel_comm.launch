@@ -1,7 +1,0 @@
-<launch>
-<node name="image_publisher" pkg="murmel_comm" type="camera.py" />
-<node name="mqtt_connection" pkg="murmel_comm" type="connection_mqtt.py" />
-<node name="connection_websocket" pkg="murmel_comm" type="connection_websocket.py" />
-<node name="simulation" pkg="murmel_comm" type="simulation.py" />
-
-</launch>
