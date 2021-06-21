@@ -44,3 +44,7 @@ Deployment of the developed communication network is carried out in three steps 
 3) Installation of the [LoRaWAN creditentials on smart dustbins](smart_dustbin)
 
 ## Simulation
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+
+ <iframe width="420" height="315" src="https://www.youtube.com/embed/tgbNymZ7vqY"> </iframe> 
