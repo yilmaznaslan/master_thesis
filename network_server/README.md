@@ -12,7 +12,10 @@ In the figure below links between the servers can be seen.
 
 <img src="../images/murmel_servers_overview2.png" alt =" asda" > 
 
-MQTT Server is used to handle the telemetry data communication between
+MQTT Server is used to handle the telemetry data communication between robots and dustbins. Although robots can directly connect to MQTT Server via the 4G connection, telemetry data coming from dustbins are accessed via the MQTT API of the *The Things Network*.
+
+
+
 The purpose of the HTTP Server is to establish a user interface for the communication between robot other browser based clients. As an output of the developed HTTP Server three different services are created as below;
 - Camera Streaming Service
 - Route Updating Serviice
