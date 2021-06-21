@@ -30,10 +30,17 @@ with wireless communication modules.
 ### Autonome Service Robot
 During the course of this undertaking the TU Berlin and its associated partner in this project the BSR will investigate how far a specially developed service robot can support and improve the existing process in the field of waste management in a city like Berlin. Autonome Service Robots will be the main focus in this context to automate the garbage collection procedures.
 
+Robots are running on Robots Operating System ROS by utilizing different packages and algorithms for each specific task. In order to establish communication links to MURMEL Network Server a ROS package called *murmel_comm* is created. The package contains the python nodes to create MQTT and WebSocket Clients.
+
 ### MURMEL Network server
 The developed MURMEL Network Server will be the central unit in the communication network between to link the communication between robots, dustbins, and the application control center.
 
 
 ## Installation
+Deployment of the developed communication network is carried out in three steps as shown below. For a more detailed description of the installation procedures please follow the links.
+
+1) Installation of the [network server](network_server)
+2) Installation of the [ROS communication package](ros_package)
+3) Installation of the [LoRaWAN creditentials on smart dustbins](smart_dustbin)
 
 ## Simulation
