@@ -11,7 +11,7 @@ import time
 pub  = None
 rate =  None
 bridge = CvBridge()
-resource = 2  # 2 for external camera
+resource = 0  # 2 for external camera
 def init_camera():
   
     cap = cv2.VideoCapture(resource)

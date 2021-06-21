@@ -19,7 +19,7 @@ from cv_bridge import CvBridge
 import os
 import ssl
 bridge = CvBridge()
-ws_host = "murmel.website"
+ws_host = "127.0.1.1"
 ws_port = "8000"
 
 frame = np.ones((480, 640, 3), dtype=np.uint8)
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     init_node()
     init_frame_susbcriber_thread()
     websocket.enableTrace(False)
-    ws = websocket.WebSocketApp("wss://"+ws_host+":8000", on_open=on_open,
+    ws = websocket.WebSocketApp("ws://"+ws_host+":8000", on_open=on_open,
                                 on_message=on_message, on_error=on_error, keep_running=False)
     try:
         result = ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})    # retrun trrue if error occurs

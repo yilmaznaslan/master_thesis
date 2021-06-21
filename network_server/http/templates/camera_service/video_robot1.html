@@ -50,15 +50,15 @@
 
         robotimg.src = "../../static/tenor.gif"
 
-        //ws_host = "127.0.0.1"
+        ws_host = "127.0.1.1"
         //ws_host = "85.215.90.115"
-        ws_host = "murmel.website"
-        let uri = "wss://" + ws_host + ":8000";
+        //ws_host = "murmel.website"
+        let uri = "ws://" + ws_host + ":8000";
         socket = new WebSocket(uri);
 
         socket.onopen = function (event) {
             console.log("WebSocket is open now.");
-            socket.send("robot1_listener");
+            socket.send("robot1_camera_client");
         };
 
         socket.onmessage = function (event) {
