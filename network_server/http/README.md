@@ -6,3 +6,12 @@
   - [ ] If robots websocket connection is lost during streaming, WebSocket Server should notfiy the browser client that connecstion is lost
 - [x] If the robots websocket connection is dead, print an error message indicating that robot is not alive.
 
+
+
+
+
+Route Update Service
+- [ ] File update routine to robot should be restudied, Currently it doesn't work
+
+
+
