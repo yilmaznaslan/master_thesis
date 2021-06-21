@@ -1,4 +1,6 @@
 ## Overview
+
+<img src="images/murmel_servers_overview.png", width="500" >
 The purpose of the HTTP Server is to establish a user interface for the communication between robot other browser based clients. As an output of the developed HTTP Server three different services are created as below;
 - Camera Streaming Service
 - Route Updating Serviice
