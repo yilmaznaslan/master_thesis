@@ -1,8 +1,18 @@
+
+# MURMEL Network Server
+
 ## Overview
+MURMEL Network Server consists of several servers and software programs used in the communication between the components.
+The designed network server consists of the following servers
+- WebSocket Server
+- MQTT Server
+- HTTP Server
+
+In the figure below links between the servers can be seen.
+
+<img src="../images/murmel_servers_overview.png" alt =" asda" > 
 
 
-
-<img src="../../images/murmel_servers_overview.png" alt =" asda" > 
 The purpose of the HTTP Server is to establish a user interface for the communication between robot other browser based clients. As an output of the developed HTTP Server three different services are created as below;
 - Camera Streaming Service
 - Route Updating Serviice
