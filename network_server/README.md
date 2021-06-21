@@ -40,7 +40,7 @@ For the installation of the Server application, following external libraries are
   - pip install websockets
 
 - MQTT Server
-For demonstraton purposes a publich MQTT Server from *[Thingsboard]*(https://thingsboard.io" is used. However any additonal MQTT Server can also be deplyed.
+For demonstraton purposes a publich MQTT Server from [*Thingsboard*](https://thingsboard.io) is used. However any additonal MQTT Server can also be deployed.
   
 
 
