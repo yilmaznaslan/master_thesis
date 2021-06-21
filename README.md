@@ -12,11 +12,23 @@ network, route information, sensor values, and actuator states will be instantly
 * [Simulation](#simulation)
 
 ## Introduction
+The designed communication network for the project MURMEL consist of three components as below;
 
-Repository consists of three main components of the communication network
-- LoRaWAN implementation for the *Smart Dustbins*
-- ROS package for the *Service Robot*
+- Smart Dustbins
+- Autonome Service Robots
 - Murmel Application Server 
+
+
+Image
+### Smart Dustbin
+
+
+### Autonome Service Robot
+
+
+### Murmel Application Server
+
+
 
 
 ## Installation
