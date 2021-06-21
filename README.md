@@ -16,19 +16,22 @@ The designed communication network for the project MURMEL consist of three compo
 
 - Smart Dustbins
 - Autonome Service Robots
-- Murmel Application Server 
+- MURMEL Network Server 
 
 <img src="images/murmel_comm_overview.png" alt="Girl in a jacket" width="500" >
-<img src="images/murmel_comm_overview.png", alt = "asd", width= "100" >
-Image
-### Smart Dustbin
 
+### Smart Dustbin
+The smart dustbin idea is based on robots’ route optimization to prevent unnecessary
+driving schedules to empty non-full dustbins. The dustbins ’ state can be measured in
+regular intervals by installing sensors in dustbins to measure the fullness levels. However,
+for transmitting the sensor data to the central control center, dustbins must be equipped
+with wireless communication modules.
 
 ### Autonome Service Robot
+During the course of this undertaking the TU Berlin and it's associated partner in this project the BSR will investigate how far a specially developed service robot can support and improve the existing process in the field of waste management in a city like Berlin. Autonome Service Robots will be the main focus in this context to autmate the garbage collection procedures.
 
-
-### Murmel Application Server
-
+### MURMEL Network server
+The developed MURMEL Network Server will be the central unit in the commuication network between to link the communication between robots, dustbins and application control center.
 
 
 
