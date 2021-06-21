@@ -18,7 +18,8 @@ The designed communication network for the project MURMEL consist of three compo
 - Autonome Service Robots
 - Murmel Application Server 
 
-
+<img src="images/murmel_comm_overview.png" alt="Girl in a jacket" width="500" >
+<img src="images/murmel_comm_overview.png", alt = "asd", width= "100" >
 Image
 ### Smart Dustbin
 
