@@ -45,6 +45,6 @@ Deployment of the developed communication network is carried out in three steps 
 
 ## Simulation
 
-[![Youtube](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/embed/tgbNymZ7vqY)
+[![Youtube](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=CppRs5zQB3I&t=132s)
 
  
