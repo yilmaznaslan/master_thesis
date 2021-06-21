@@ -12,15 +12,6 @@ import ssl
 import socket
 
 
-def init_host():
-    global http_host_name, http_host_ip, http_host_port
-
-    # Replace IP address with the public IP address or host name of the server machine
-    http_host_name = socket.gethostname()
-    http_host_ip = socket.gethostbyname(http_host_name)
-    http_host_port = 8080
-
-
 # Create a Flask App
 app = Flask(__name__)
 
@@ -59,10 +50,21 @@ def route_service_request_robot1():
 def route_service_response_robot1():
     return render_template('route_service/route_response_robot1.html')
 
-# Context settings in case SSL encryption is needed. Please make sure to use correct private key for server.
+
+def init_host():
+    global http_host_name, http_host_ip, http_host_port
+
+    # Replace IP address with the public IP address or host name of the server machine
+    http_host_name = socket.gethostname()
+    http_host_ip = socket.gethostbyname(http_host_name)
+    http_host_port = 8080
 
 
 def set_context():
+    """ 
+    Context settings in case SSL encryption is needed. Please make sure to use correct private key for server.
+    """
+
     global context
     path = os.environ['murmel_application_server']
     print('path to env variable'+os.environ['murmel_application_server'])
